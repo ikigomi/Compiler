@@ -1,0 +1,6 @@
+﻿<div class="text-danger fs-1">Доступ запрещен</div>
+
+@if (TempData["DeniedMessage"] != null)
+{
+    <h3>@TempData["DeniedMessage"]</h3>
+}

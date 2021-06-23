@@ -1,0 +1,104 @@
+﻿@model Kata
+
+<script src="~/js/ckeditor/ckeditor.js"></script>
+
+<div>
+    <div>
+        <form asp-controller="Admin" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All"></div>
+
+            <div class="mb-3">
+                <label class="form-label" asp-for="LanguageId"></label>
+                @if (Model.LanguageId == default)
+                {
+                    <select class="form-control" asp-for="LanguageId" asp-items="ViewBag?.Languages">
+                        <option selected="selected" disabled="disabled">Выберите язык</option>
+                    </select>
+                }
+                else
+                {
+                    <input type="hidden" asp-for="LanguageId" />
+                    <select class="form-control" asp-for="LanguageId" asp-items="ViewBag?.Languages" disabled></select>
+                }
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" asp-for="Name"></label>
+                <input class="form-control" asp-for="Name" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" asp-for="Description"></label>
+                <textarea class="form-control" asp-for="Description"></textarea>
+            </div>
+
+
+            <div id="tests" class="mb-3">
+                <h3>Тесты</h3>
+                <div id="input" class="mb-3">
+                    <label class="form-label" asp-for="InputData"></label>
+                    @for (int i = 0; i < Model.InputData.Length; ++i)
+                    {
+                        <input class="form-control mb-3" asp-for="InputData[i]" />
+                    }
+                </div>
+
+                <div id="output" class="mb-3">
+                    <label class="form-label" asp-for="OutputData"></label>
+                    @for (int i = 0; i < Model.OutputData.Length; ++i)
+                    {
+                        <input class="form-control mb-3" asp-for="OutputData[i]" />
+                    }
+                </div>
+
+                <div class="form-text text-danger">Запятая для разделения данных для каждой переменной</div>
+                <a id="addTest" class="btn btn-success">Добавить тест</a>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" asp-for="InitialCode"></label>
+                <textarea class="form-control codemirror" asp-for="InitialCode"></textarea>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    window.onload = function() {
+        var newCKEdit = CKEDITOR.replace('@Html.IdFor(x=>x.Description)');
+        newCKEdit.updateElement();
+    }
+</script>
+
+<script>
+    var codemirrorInstance = [];
+    var foundTextareasArr = document.getElementsByClassName('codemirror');
+    for (var i = 0; foundTextareasArr[i]; ++i) {
+        codemirrorInstance[i] = CodeMirror.fromTextArea(foundTextareasArr[i], {
+            mode: "text/x-csharp",
+            theme: "mbo",
+            lineNumbers: true,
+            autoCloseBrackets: true
+        });
+    }
+
+</script>
+
+<script>
+    $(function () {
+        var i = @Model.InputData.Length;
+        $('#addTest').click(function () {
+            var inputHtml = "<input class='form-control mb-3' type='text' id='InputData_"+i+"_' name='InputData["+i+"]' value=''>";
+            var outputHtml = "<input class='form-control mb-3' type='text' id='OutputData_"+i+"_' name='OutputData["+i+"]' value=''>";
+            $('#input').append(inputHtml);
+            $('#output').append(outputHtml);
+            i++;
+        })
+    })
+</script>

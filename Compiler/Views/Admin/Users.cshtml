@@ -1,0 +1,33 @@
+﻿@model List<ApplicationUser>
+
+@if (Model?.Any() == true)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Логин</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Группа</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Group</td>
+                <td><a class="btn btn-primary" asp-action="Stats" asp-controller="Admin" asp-route-Id="@user.Id">Посмотреть статистику</a></td>
+                <td><a class="btn btn-primary" asp-action="AttemptsEdit" asp-controller="Admin" asp-route-Id="@user.Id">Добавить попытки</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="fs-3">Пользователи не найдены</div>
+}

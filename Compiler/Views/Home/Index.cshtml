@@ -1,0 +1,32 @@
+﻿@model HomeViewModel
+
+<div class="text-center">
+    <h1 class="display-2">Компилятор кода</h1>
+</div>
+@if(!User.Identity.IsAuthenticated)
+{
+    <div class="fs-2">
+        Для решения задач нужно пройти <a asp-controller="Account" asp-action="Login">авторизацию.</a>
+    </div>
+
+}
+else
+{
+    foreach (var lang in Model.Languages)
+    {
+        <div class="col text-center">
+            <div class="fs-4">
+                <p class="fs-3">Язык: @lang.Name</p>
+                <p class="fs-3">Список задач:</p>
+                <ul class="list-group">
+                    @foreach (var kata in Model.Katas.Where(x => x.LanguageId == lang.Id))
+                    {
+                        <li class="list-group-item">
+                            <a class="btn btn-outline-dark" asp-controller="Home" asp-action="Solve" asp-route-id="@kata.Id">@kata.Name</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,99 @@
+﻿@model KataSolutionViewModel
+
+<div class="text-center">
+    <h1 class="display-2">Компилятор кода</h1>
+</div>
+<div>
+    <h3>Название: @Model.Kata.Name</h3>
+    <p>Описание: @Html.Raw(Model.Kata.Description)</p>
+</div>
+<div>
+    <h2>Код для компиляции:</h2>
+</div>
+<div>
+    <form asp-action="Solve" asp-controller="Home">
+        <input type="hidden" name="id" value="@Model.Kata.Id" />
+        <div class="mb-3">
+            <textarea class="codemirror" name="code">@(Model.Code ?? Model.Kata.InitialCode)</textarea>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit">Запустить</button>
+        </div>
+    </form>
+</div>
+
+
+
+@if (Model.Code != null)
+{
+    <div class="mt-5">
+
+        @if (Model.IsSolved)
+        {
+            <div class="fs-3 text-success">Тесты пройдены</div>
+        }
+        else
+        {
+            <div class="fs-3 text-danger">Тесты не пройдены</div>
+        }
+
+        <div class="mt-2 mb-3">
+            @foreach (var item in Model.Tests)
+            {
+                @if (item.Contains("Пройден"))
+                {
+                    <div class="text-success">@item</div>
+                }
+
+                else if (item.Contains("Не пройден"))
+                {
+                    <div class="text-danger">@item</div>
+                }
+
+            }
+        </div>
+
+    </div>
+
+    <div>
+        <textarea class="codemirror" readonly>
+            @foreach (var item in Model.Result)
+            {
+                @item;
+            }
+        </textarea>
+    </div>
+}
+
+@if (Model.Kata.Language.Name == "CSharp")
+{
+    <script>
+        var codemirrorInstance = [];
+        var foundTextareasArr = document.getElementsByClassName('codemirror');
+        for (var i = 0; foundTextareasArr[i]; ++i) {
+            codemirrorInstance[i] = CodeMirror.fromTextArea(foundTextareasArr[i], {
+                mode: "text/x-csharp",
+                theme: "mbo",
+                lineNumbers: true,
+                autoCloseBrackets: true
+            });
+        }
+
+    </script>
+}
+else
+{
+    <script>
+        var codemirrorInstance = [];
+        var foundTextareasArr = document.getElementsByClassName('codemirror');
+        for (var i = 0; foundTextareasArr[i]; ++i) {
+            codemirrorInstance[i] = CodeMirror.fromTextArea(foundTextareasArr[i], {
+                mode: "text/x-python",
+                theme: "mbo",
+                lineNumbers: true,
+                autoCloseBrackets: true
+            });
+        }
+
+    </script>
+}
